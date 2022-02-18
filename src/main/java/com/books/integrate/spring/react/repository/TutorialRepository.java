@@ -16,4 +16,6 @@ public interface TutorialRepository extends JpaRepository<Tutorial, Long> {
 	//obtener tutoriales por titulo
 	List<Tutorial> findByTitle(String title);
 	Optional<Tutorial> findBytitle(String title);
+
+
 }

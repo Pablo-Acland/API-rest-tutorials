@@ -128,7 +128,7 @@ public class TutorialController {
 	}
 
 	@DeleteMapping("/tutorials/Delete/{title}")
-	public ResponseEntity<String> deleteTutorial(@PathVariable("title") String title) {
+	public ResponseEntity<String> deleteTutorialsTitle(@PathVariable("title") String title) {
 
 		try {
 			Iterator x = getTutorialsTitle(title).iterator();
@@ -143,7 +143,24 @@ public class TutorialController {
 		}
 
 	}
-	
+
+	@PutMapping("/tutorials/update/{title}")
+	public ResponseEntity<Tutorial> updateTutorialTitle(@PathVariable("title") String title, @RequestBody Tutorial tuto){
+		Optional<Tutorial> tuto2 = tutorialRepository.findBytitle(title);
+
+		if (tuto2.isPresent()) {
+			Tutorial tuto3 = tuto2.get();
+
+			tuto3.setTitle(tuto.getTitle());
+			tuto3.setDescription(tuto.getDescription());
+			tuto3.setPublished(tuto.isPublished());
+
+			return new ResponseEntity<>(tutorialRepository.save(tuto3),
+					HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 
 
 
