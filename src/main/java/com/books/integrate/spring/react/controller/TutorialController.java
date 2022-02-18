@@ -64,7 +64,7 @@ public class TutorialController {
 	public ResponseEntity<Tutorial> createTutorial(@RequestBody Tutorial tutorial) {
 		try {
 			Tutorial _tutorial = tutorialRepository
-					.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(),  false));
+					.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), false));
 			return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
@@ -86,13 +86,13 @@ public class TutorialController {
 		}
 	}
 
-//HttpStatus
+	//HttpStatus
 	@DeleteMapping("/tutorials/{id}")
 	public ResponseEntity<String> deleteTutorial(@PathVariable("id") long id) {
 		try {
 			tutorialRepository.deleteById(id);
-				return new ResponseEntity<>("Tutorials DELETE!! ",HttpStatus.NO_CONTENT);
-			} catch (Exception e) {
+			return new ResponseEntity<>("Tutorials DELETE!! ", HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
 		}
 	}
@@ -121,6 +121,31 @@ public class TutorialController {
 			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
 		}
 	}
+
+	public List<Tutorial> getTutorialsTitle(String title) {
+
+		return this.tutorialRepository.findByTitle(title);
+	}
+
+	@DeleteMapping("/tutorials/Delete/{title}")
+	public ResponseEntity<String> deleteTutorial(@PathVariable("title") String title) {
+
+		try {
+			Iterator x = getTutorialsTitle(title).iterator();
+			while (x.hasNext()) {
+				Tutorial tuto = (Tutorial) x.next();
+				Long idtuto = tuto.getId();
+				tutorialRepository.deleteById(idtuto);
+			}
+			return new ResponseEntity<>("Tutorials Delete ", HttpStatus.NO_CONTENT);
+		} catch (Exception err) {
+			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+		}
+
+	}
+	
+
+
 
 
 

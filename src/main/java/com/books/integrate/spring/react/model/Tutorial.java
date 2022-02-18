@@ -19,6 +19,9 @@ public class Tutorial {
 	@Column(name = "published")
 	private boolean published;
 
+	@Column(name = "price")
+	private int price;
+
 	public Tutorial() {
 
 	}
@@ -58,6 +61,7 @@ public class Tutorial {
 
 		this.published = isPublished;
 	}
+
 
 	@Override
 	public String toString() {
