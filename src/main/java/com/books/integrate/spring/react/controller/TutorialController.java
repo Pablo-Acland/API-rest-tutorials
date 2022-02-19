@@ -60,11 +60,10 @@ public class TutorialController {
 	}
 
 
-	@PostMapping("/tutorials")
+	@PostMapping("/tutorial")
 	public ResponseEntity<Tutorial> createTutorial(@RequestBody Tutorial tutorial) {
 		try {
-			Tutorial _tutorial = tutorialRepository
-					.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), false));
+			Tutorial _tutorial = tutorialRepository.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), false, tutorial.getPrice()));
 			return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
@@ -134,8 +133,7 @@ public class TutorialController {
 			Iterator x = getTutorialsTitle(title).iterator();
 			while (x.hasNext()) {
 				Tutorial tuto = (Tutorial) x.next();
-				Long idtuto = tuto.getId();
-				tutorialRepository.deleteById(idtuto);
+				tutorialRepository.deleteById(tuto.getId());
 			}
 			return new ResponseEntity<>("Tutorials Delete ", HttpStatus.NO_CONTENT);
 		} catch (Exception err) {
@@ -148,20 +146,30 @@ public class TutorialController {
 	public ResponseEntity<Tutorial> updateTutorialTitle(@PathVariable("title") String title, @RequestBody Tutorial tuto){
 		Optional<Tutorial> tuto2 = tutorialRepository.findBytitle(title);
 
-		if (tuto2.isPresent()) {
+		if (tuto2.isPresent()){
 			Tutorial tuto3 = tuto2.get();
 
 			tuto3.setTitle(tuto.getTitle());
 			tuto3.setDescription(tuto.getDescription());
 			tuto3.setPublished(tuto.isPublished());
-
+			tuto3.setPrice(tuto.getPrice());
 			return new ResponseEntity<>(tutorialRepository.save(tuto3),
 					HttpStatus.OK);
-		} else {
+		}else{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
+	@GetMapping("/tutorials/consultation/{price}")
+	public ResponseEntity<List<Tutorial>> getTutorialsPrice(@PathVariable("price") int price){
+
+		try {
+			List<Tutorial> tuto = tutorialRepository.findByPrice(price);
+			return new ResponseEntity<>(tuto, HttpStatus.OK);
+		}catch (Exception err){
+			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+		}
+	}
 
 
 
